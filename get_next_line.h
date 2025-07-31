@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-# define BUF_SIZE 100
+# define BUF_SIZE 0
 
 size_t ft_strlen(const char *s);
 char	*ft_strjoin(char const *s1, char const *s2);

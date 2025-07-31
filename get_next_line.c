@@ -86,5 +86,10 @@ char	*get_next_line(int fd)
 	if (!ft_strchr(remain, '\n'))
 		reading(fd, &remain);
 	line = get_line_and_remain(&remain);
+	if (!line) // !!! добавить ли проверку на (remain && !*remain) ?
+	{
+		free(remain);
+		remain = NULL;
+	}
 	return (line);
 }
