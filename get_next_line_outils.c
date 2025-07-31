@@ -22,7 +22,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	d_len = ft_strlen(dst);
 	s_len = ft_strlen(src);
 	if (size <= d_len)
-		return (s_len + size); //??
+		return (s_len + size);
 	while ((i < size - d_len - 1) && src[i])
 	{
 		dst[d_len + i] = src[i];
@@ -34,8 +34,8 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	int		len;
 	char	*res;
+	ssize_t len;
 
 	if (!s1 || !s2)
 		return (NULL);
