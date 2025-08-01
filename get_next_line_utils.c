@@ -22,42 +22,31 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
-{
-	size_t	i;
-	size_t	d_len;
-	size_t	s_len;
-
-	if (!src || !dst)
-		return (0);
-	i = 0;
-	d_len = ft_strlen(dst);
-	s_len = ft_strlen(src);
-	if (size <= d_len)
-		return (s_len + size);
-	while ((i < size - d_len - 1) && src[i])
-	{
-		dst[d_len + i] = src[i];
-		i++;
-	}
-	dst[d_len + i] = '\0';
-	return (d_len + s_len);
-}
-
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*res;
-	ssize_t	len;
+	ssize_t	len1;
+	ssize_t	len2;
+	ssize_t	i;
+	ssize_t	j;
 
 	if (!s1 || !s2)
 		return (NULL);
-	len = ft_strlen(s1) + ft_strlen(s2);
-	res = (char *)malloc(sizeof(char) * (len + 1));
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	res = (char *)malloc(sizeof(char) * (len1 + len2 + 1));
 	if (!res)
 		return (NULL);
-	res[0] = '\0';
-	ft_strlcat(res, s1, len + 1);
-	ft_strlcat(res, s2, len + 1);
+	i = 0;
+	while (i < len1)
+	{
+		res[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (j < len2)
+		res[i++] = s2[j++];
+	res[i] = '\0';
 	return (res);
 }
 
@@ -101,4 +90,13 @@ char	*ft_strndup(const char *s, size_t n)
 	}
 	new[i] = '\0';
 	return (new);
+}
+
+void	safe_free(char **p)
+{
+	if (*p)
+	{
+		free(*p);
+		*p = NULL;
+	}
 }

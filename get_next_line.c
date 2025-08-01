@@ -12,15 +12,6 @@
 
 #include "get_next_line.h"
 
-void	safe_free(char **p)
-{
-	if (*p)
-	{
-		free(*p);
-		*p = NULL;
-	}
-}
-
 char	*get_line1(char *remain)
 {
 	size_t	i;
@@ -101,6 +92,7 @@ char	*get_next_line(int fd)
 			return (NULL);
 		remain[0] = '\0';
 	}
+	read_res = 1;
 	if (!ft_strchr(remain, '\n'))
 	{
 		read_res = reading(fd, &remain);
