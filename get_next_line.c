@@ -39,8 +39,6 @@ char	*get_line1(char *remain)
 	while (remain[i] != '\n')
 		i++;
 	line = ft_strndup(remain, i + 1);
-	if (!line)
-		return (NULL);
 	return (line);
 }
 
@@ -56,15 +54,12 @@ void	get_new_remain(char **remain, char *line)
 	len = ft_strlen(line);
 	new_remain = ft_strndup(*remain + len, ft_strlen(*remain) - len);
 	if (!new_remain)
-	{
-		safe_free(remain);
-		return ;
-	}
+		return (safe_free(remain));
 	free(*remain);
 	*remain = new_remain;
 }
 
-void	reading(int fd, char **remain)
+ssize_t	reading(int fd, char **remain)
 {
 	ssize_t	read_res;
 	char	*buf;
@@ -72,29 +67,30 @@ void	reading(int fd, char **remain)
 
 	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
-		return ;
+		return (-1);
 	read_res = read(fd, buf, BUFFER_SIZE);
 	if (read_res < 0)
-		return (free(buf), safe_free(remain));
+		return (free(buf), safe_free(remain), read_res);
 	while (read_res > 0)
 	{
 		buf[read_res] = '\0';
 		tmp = ft_strjoin(*remain, buf);
 		if (!tmp)
-			return (free(buf), safe_free(remain));
+			return (free(buf), safe_free(remain), -1);
 		free(*remain);
 		*remain = tmp;
 		if (ft_strchr(*remain, '\n'))
 			break ;
 		read_res = read(fd, buf, BUFFER_SIZE);
 	}
-	free(buf);
+	return (free(buf), read_res);
 }
 
 char	*get_next_line(int fd)
 {
 	static char	*remain;
 	char		*line;
+	ssize_t		read_res;
 
 	if (BUFFER_SIZE <= 0 || fd < 0)
 		return (NULL);
@@ -106,13 +102,14 @@ char	*get_next_line(int fd)
 		remain[0] = '\0';
 	}
 	if (!ft_strchr(remain, '\n'))
-		reading(fd, &remain);
+	{
+		read_res = reading(fd, &remain);
+		if (read_res < 0)
+			return (safe_free(&remain), NULL);
+	}
 	line = get_line1(remain);
 	if (!line && remain)
-	{
-		safe_free(&remain);
-		return (NULL);
-	}
+		return (safe_free(&remain), NULL);
 	get_new_remain(&remain, line);
 	return (line);
 }
