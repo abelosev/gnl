@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anbelose <anbelose@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/01 14:01:51 by anbelose          #+#    #+#             */
+/*   Updated: 2025/08/01 14:27:55 by anbelose         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-char *get_line_remain_outil(char **remain, int i)
+char	*get_line_remain_outil(char **remain, int i)
 {
-	char *new_remain;
-	char *line;
+	char	*new_remain;
+	char	*line;
 
 	line = ft_strndup(*remain, i + 1);
 	if (!line)
@@ -21,10 +33,10 @@ char *get_line_remain_outil(char **remain, int i)
 	return (line);
 }
 
-char *get_line_and_remain(char **remain)
+char	*get_line_and_remain(char **remain)
 {
-	size_t i;
-	char *line;
+	size_t	i;
+	char	*line;
 
 	i = 0;
 	if (!*remain || !**remain)
@@ -42,41 +54,41 @@ char *get_line_and_remain(char **remain)
 	return (line);
 }
 
-void reading(int fd, char **remain)
+void	reading(int fd, char **remain)
 {
-	ssize_t read_res;
-	char buf[BUF_SIZE + 1];
-	char *tmp;
+	ssize_t	read_res;
+	char	*buf;
+	char	*tmp;
 
-	read_res = read(fd, buf, BUF_SIZE);
-	if (read_res < 0)
+	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buf)
 		return ;
+	read_res = read(fd, buf, BUFFER_SIZE);
+	if (read_res < 0)
+		return (free(buf));
 	while (read_res > 0)
 	{
 		buf[read_res] = '\0';
 		tmp = ft_strjoin(*remain, buf);
-		if (!tmp)
-		{
-			free(*remain);
-			*remain = NULL;
-			return ;
-		}
 		free(*remain);
 		*remain = tmp;
+		if (!tmp)
+			return (free(buf));
 		if (ft_strchr(*remain, '\n'))
 			break ;
-		read_res = read(fd, buf, BUF_SIZE);
+		read_res = read(fd, buf, BUFFER_SIZE);
 	}
+	free(buf);
 }
 
 char	*get_next_line(int fd)
 {
-	static char *remain;
-	char *line;
+	static char	*remain;
+	char		*line;
 
-	if (BUF_SIZE <= 0 || fd < 0)
+	if (BUFFER_SIZE <= 0 || fd < 0)
 		return (NULL);
-	if(!remain)
+	if (!remain)
 	{
 		remain = malloc(1);
 		if (!remain)
@@ -86,7 +98,7 @@ char	*get_next_line(int fd)
 	if (!ft_strchr(remain, '\n'))
 		reading(fd, &remain);
 	line = get_line_and_remain(&remain);
-	if (!line) // !!! добавить ли проверку на (remain && !*remain) ?
+	if (!line)
 	{
 		free(remain);
 		remain = NULL;

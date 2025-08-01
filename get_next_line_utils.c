@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anbelose <anbelose@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/01 14:02:10 by anbelose          #+#    #+#             */
+/*   Updated: 2025/08/01 14:06:01 by anbelose         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-size_t ft_strlen(const char *s)
+size_t	ft_strlen(const char *s)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (s[i])
@@ -35,7 +47,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*res;
-	ssize_t len;
+	ssize_t	len;
 
 	if (!s1 || !s2)
 		return (NULL);
@@ -69,8 +81,8 @@ char	*ft_strchr(const char *s, int c)
 
 char	*ft_strndup(const char *s, size_t n)
 {
-	size_t		len;
-	size_t		i;
+	size_t	len;
+	size_t	i;
 	char	*new;
 
 	if (!s)
